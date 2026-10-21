@@ -1,0 +1,32 @@
+
+REM FLIPSEC V1.0 - macOS INVENTORY
+REM CREATED BY FNT
+REM FIXED SPOTLIGHT LAUNCH
+REM FOR YOUR OWN UNLOCKED MAC
+
+DELAY 3000
+
+REM OPEN SPOTLIGHT
+GUI SPACE
+DELAY 2500
+
+REM CLEAR EXISTING SEARCH
+GUI a
+DELAY 500
+
+REM TYPE TERMINAL ONLY ONCE
+STRING Terminal
+DELAY 3500
+ENTER
+
+REM WAIT FOR TERMINAL TO OPEN
+DELAY 10000
+
+REM CONFIRM TERMINAL IS READY
+STRING echo "FLIPSEC V1.0 READY - FNT"
+ENTER
+DELAY 1200
+
+REM CREATE CSV FILE
+STRING python3 -c 'import os,csv,stat,pwd,datetime,pathlib; h=pathlib.Path.home(); o=h/"Desktop"/("flipsec_inventory_"+datetime.datetime.now().strftime("%H-%M-%S_%d-%m-%Y")+".csv"); f=open(o,"w",newline="",encoding="utf-8-sig"); w=csv.writer(f); w.writerow(["File Name","Type","Hidden","Size (Bytes)","Size (KB)","Full Path","Date Created","Last Modified","Last Accessed","Permissions","Owner"]); fmt=lambda t:datetime.datetime.fromtimestamp(t).strftime("%Y-%m-%d %H:%M:%S"); stack=[h]; seen=set(); count=0; flag=getattr(stat,"UF_HIDDEN",0); exec("while stack:\n p=stack.pop()\n try:\n  s=p.lstat()\n  if not stat.S_ISDIR(s.st_mode): continue\n  k=(s.st_dev,s.st_ino)\n  if k in seen: continue\n  seen.add(k)\n  for e in os.scandir(p):\n   try:\n    z=e.stat(follow_symlinks=False); typ=\"Folder\" if stat.S_ISDIR(z.st_mode) else \"Link\" if stat.S_ISLNK(z.st_mode) else \"File\" if stat.S_ISREG(z.st_mode) else \"Other\"; hidden=\"Yes\" if e.name.startswith(\".\") or bool(getattr(z,\"st_flags\",0)&flag) else \"No\"; owner=pwd.getpwuid(z.st_uid).pw_name; w.writerow([e.name,typ,hidden,z.st_size,round(z.st_size/1024,2),e.path,fmt(getattr(z,\"st_birthtime\",z.st_ctime)),fmt(z.st_mtime),fmt(z.st_atime),stat.filemode(z.st_mode),owner]); count+=1\n    if stat.S_ISDIR(z.st_mode): stack.append(e.path)\n   except (OSError,ValueError,KeyError): pass\n except (OSError,ValueError): pass"); f.close(); print("FLIPSEC COMPLETE:",count,"items",o); os.system("open "+__import__("shlex").quote(str(o)))'
+ENTER
