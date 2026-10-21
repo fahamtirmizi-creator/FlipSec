@@ -1,0 +1,22 @@
+
+REM FLIPPER ZERO - MAC SECURITY SCANNER
+REM Opens Terminal via Spotlight
+REM Saves report to Desktop
+
+DELAY 2000
+
+REM Open Spotlight
+GUI SPACE
+DELAY 1500
+
+REM Search for Terminal
+STRING Terminal
+DELAY 2000
+ENTER
+
+REM Wait for Terminal to open
+DELAY 6000
+
+REM Run security scan and save report
+STRING OUT="$HOME/Desktop/flipsec_$(date +%H-%M-%S_%d-%m-%Y).txt"; { echo "=== FLIPSEC SECURITY REPORT ==="; date; echo "=== SYSTEM ==="; sw_vers; echo "=== USER ==="; whoami; echo "=== PROCESSES ==="; ps aux; echo "=== LISTENING PORTS ==="; lsof -nP -iTCP -sTCP:LISTEN; echo "=== NETWORK ==="; netstat -an; echo "=== FILEVAULT ==="; fdesetup status; echo "=== FIREWALL ==="; /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate; echo "=== GATEKEEPER ==="; spctl --status; echo "=== SCAN COMPLETE ==="; } > "$OUT" 2>&1; open -a TextEdit "$OUT"
+ENTER
