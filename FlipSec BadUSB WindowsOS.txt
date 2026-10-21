@@ -1,0 +1,28 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2907
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+REM FLIPSEC - WINDOWS SECURITY SCANNER\
+REM Flipper Zero BadUSB\
+REM Windows 10 / Windows 11\
+REM Run on your own unlocked PC\
+\
+DELAY 2000\
+\
+REM Open Windows Run dialog\
+GUI r\
+DELAY 1000\
+\
+REM Launch PowerShell\
+STRING powershell\
+ENTER\
+DELAY 4000\
+\
+REM Create timestamped Desktop report\
+STRING $d=[Environment]::GetFolderPath('Desktop'); $f=Join-Path $d ("flipsec_"+(Get-Date -Format 'HH-mm-ss_dd-MM-yyyy')+".txt"); "=== FLIPSEC WINDOWS SECURITY REPORT ===" | Out-File $f; "=== DATE ===" | Out-File $f -Append; Get-Date | Out-File $f -Append; "=== SYSTEM ===" | Out-File $f -Append; Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,BuildNumber | Out-File $f -Append; "=== USER ===" | Out-File $f -Append; whoami | Out-File $f -Append; "=== PROCESSES ===" | Out-File $f -Append; Get-Process | Sort-Object CPU -Descending | Select-Object ProcessName,Id,CPU,WorkingSet | Out-File $f -Append; "=== LISTENING PORTS ===" | Out-File $f -Append; Get-NetTCPConnection -State Listen | Select-Object LocalAddress,LocalPort,OwningProcess | Out-File $f -Append; "=== NETWORK CONNECTIONS ===" | Out-File $f -Append; Get-NetTCPConnection | Select-Object LocalAddress,LocalPort,RemoteAddress,RemotePort,State | Out-File $f -Append; "=== FIREWALL ===" | Out-File $f -Append; Get-NetFirewallProfile | Select-Object Name,Enabled | Out-File $f -Append; "=== WINDOWS DEFENDER ===" | Out-File $f -Append; Get-MpComputerStatus | Select-Object AntivirusEnabled,RealTimeProtectionEnabled,AntivirusSignatureLastUpdated | Out-File $f -Append; "=== BITLOCKER ===" | Out-File $f -Append; Get-BitLockerVolume | Select-Object MountPoint,ProtectionStatus | Out-File $f -Append; "=== SCAN COMPLETE ===" | Out-File $f -Append; Start-Process notepad.exe -ArgumentList ('"'+$f+'"')\
+ENTER\
+}
