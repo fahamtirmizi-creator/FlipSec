@@ -80,7 +80,7 @@ Use FlipSec only on computers you own or have explicit permission to test.
 ## 🛠️ Roadmap
 
 - [x] macOS security diagnostics
-- [ ] Windows security diagnostics
+- [x] Windows security diagnostics
 - [ ] Linux security diagnostics
 - [ ] Automated security warnings
 - [ ] Improved reporting
